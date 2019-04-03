@@ -1,0 +1,145 @@
+import java.util.*;
+
+public class Node {
+    private Object value;
+    private Object nextValue;
+
+    private Node next;
+
+    public Node(int data) {
+        this.value = data;
+        this.next = null;
+    }
+
+    public Object getValue() {
+        return this.value;
+    }
+
+    public Node nextItem() {
+        return this.next;   
+    }
+
+    public void setNextItem(Node nextItem) {
+        this.next = (Node) nextItem;
+        this.next.setValue(nextItem.getValue());
+    }
+
+    public void setValue(Object arg0) {
+        this.value = arg0;
+    }
+
+}
+
+   import java.util.*;
+public class CircularList  {
+    private Object[] array;
+    private int arrSize;
+    private int index;
+    private Node head;
+    private Node tail;
+    public CircularList() {
+        head = null;
+        tail = null;
+    }
+
+    public boolean add(Node item) {
+
+        if (item == null) {
+            throw new NullPointerException("the item is null!!!");
+        }
+
+
+        if (head == null) {
+            head = item;
+            head.setNextItem(head);
+            arrSize++;
+
+            return true;
+        } 
+
+        Node cur = head;
+        while(cur.nextItem() != head) {
+            if(cur.getValue() == item.getValue()) {
+                throw new IllegalArgumentException("the element already " +
+                        "exists!");
+            }
+            cur = cur.nextItem();
+        }
+            head.setNextItem(item);
+            item.setNextItem(head);
+            arrSize++;
+            return true;
+    }
+    public Node getFirst() {
+        return head;
+    }
+    public void insertAfter(Node item, Node nextItem) {
+
+        if ((item == null) || (nextItem == null)) {
+            throw new NullPointerException("the item is nul!!!");
+        } else if (this.contains(nextItem) == true) {
+            throw new IllegalArgumentException("the item already exists!");
+        } 
+        Node cur = head;
+        while(cur.nextItem() != head) {
+            if(cur.getValue() == item.getValue()) {
+                nextItem.setNextItem(item.nextItem());
+                item.setNextItem(nextItem);
+            } else {
+                cur = cur.nextItem();
+            }
+        }
+    }
+    public boolean remove(Node item) {
+
+        if(item == head) {
+            Node cur = head;
+            for(int i = 0; i < arrSize-1; i++) {
+                cur = cur.nextItem();
+            }
+
+            head = head.nextItem();
+
+            for(int i = 0; i < arrSize; i++) {
+                cur = cur.nextItem();
+            }
+            arrSize--;
+            return true;
+        }
+
+        Node cur = head;
+        int counter = 0;
+        while(cur.nextItem() != head) {
+            if(cur == item) {
+                item = null;
+                cur = cur.nextItem();
+                while(cur.nextItem() != head) {
+                    cur.setNextItem(cur.nextItem().nextItem());
+                }
+            return true;    
+            }
+            cur = cur.nextItem();
+        }
+        return false;
+    }
+    public int size() {
+
+        return arrSize;
+    }
+
+    public boolean contains(Object o) {
+        if ((o == null) && (arrSize == 0)) {
+            return false;
+        }
+        Node cur = head;
+        while(cur.nextItem() != head) {
+            if(cur.getValue() == o) {
+                return true;
+            }
+            cur = cur.nextItem();
+    }
+
+        return false;
+    }
+
+}
